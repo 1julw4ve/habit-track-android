@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101114">
+<title>Habit Track</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101114;color:#f4f4f5;font-family:Arial,sans-serif;padding:24px}
+h1{font-size:28px;margin-bottom:5px}
+p{color:#92929b}
+.card{background:#1b1b21;border:1px solid #303038;border-radius:18px;padding:18px;margin:18px 0}
+.progress{height:9px;background:#333;border-radius:20px;overflow:hidden}
+.bar{height:100%;width:0;background:#b8a3ff;transition:.2s}
+.habit{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #303038}
+.habit:last-child{border:0}
+button{background:#b8a3ff;color:#17131f;border:0;padding:12px 18px;border-radius:12px;font-weight:bold}
+.check{width:27px;height:27px;border-radius:9px;border:1px solid #666;background:#222;color:white}
+.check.done{background:#b8a3ff;color:#17131f}
+small{color:#999}
+</style>
+</head>
+<body>
+<h1>Habit Track</h1>
+<p id="date"></p>
+
+<div class="card">
+<h2 id="percent">0%</h2>
+<p>Progress hari ini</p>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<p id="count">0 / 0 selesai</p>
+</div>
+
+<div class="card">
+<h3>Daily habits</h3>
+<div id="list"></div>
+</div>
+
+<div class="card">
+<button onclick="resetDay()">Reset hari ini</button>
+</div>
+
+<script>
+const habits=[
+"Bangun pagi",
+"Sekolah",
+"Minum air cukup",
+"Makan teratur",
+"Gym",
+"Lari",
+"Kurangi screen time",
+"Tidur tepat waktu"
+];
+
+const today=new Date().toISOString().slice(0,10);
+document.getElementById("date").textContent=
+new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+let data=JSON.parse(localStorage.getItem("habit-"+today)||"{}");
+
+function render(){
+const list=document.getElementById("list");
+list.innerHTML="";
+habits.forEach((h,i)=>{
+const done=!!data[i];
+list.innerHTML+=`
+<div class="habit">
+<div>${h}</div>
+<button class="check ${done?"done":""}" onclick="toggle(${i})">${done?"✓":""}</button>
+</div>`;
+});
+update();
+}
+
+function toggle(i){
+data[i]=!data[i];
+localStorage.setItem("habit-"+today,JSON.stringify(data));
+render();
+}
+
+function update(){
+const total=habits.length;
+const done=habits.filter((_,i)=>data[i]).length;
+const pct=Math.round(done/total*100);
+document.getElementById("percent").textContent=pct+"%";
+document.getElementById("bar").style.width=pct+"%";
+document.getElementById("count").textContent=done+" / "+total+" selesai";
+}
+
+function resetDay(){
+data={};
+localStorage.removeItem("habit-"+today);
+render();
+}
+render();
+</script>
+</body>
+</html>
+
