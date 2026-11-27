@@ -1,100 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101114">
-<title>Habit Track</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#15151c"><title>Habit Track</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#101114;color:#f4f4f5;font-family:Arial,sans-serif;padding:24px}
-h1{font-size:28px;margin-bottom:5px}
-p{color:#92929b}
-.card{background:#1b1b21;border:1px solid #303038;border-radius:18px;padding:18px;margin:18px 0}
-.progress{height:9px;background:#333;border-radius:20px;overflow:hidden}
-.bar{height:100%;width:0;background:#b8a3ff;transition:.2s}
-.habit{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #303038}
-.habit:last-child{border:0}
-button{background:#b8a3ff;color:#17131f;border:0;padding:12px 18px;border-radius:12px;font-weight:bold}
-.check{width:27px;height:27px;border-radius:9px;border:1px solid #666;background:#222;color:white}
-.check.done{background:#b8a3ff;color:#17131f}
-small{color:#999}
-</style>
-</head>
-<body>
-<h1>Habit Track</h1>
-<p id="date"></p>
-
-<div class="card">
-<h2 id="percent">0%</h2>
-<p>Progress hari ini</p>
-<div class="progress"><div class="bar" id="bar"></div></div>
-<p id="count">0 / 0 selesai</p>
+:root{--bg:#101117;--panel:#191a23;--panel2:#22232d;--text:#f4f3f8;--muted:#a3a3b4;--accent:#a78bfa;--accent2:#7c3aed;--line:#343541;--radius:20px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;transition:.25s;background-image:var(--wall,none)}
+body[data-theme="cute"]{--bg:#fff4f8;--panel:#fff;--panel2:#ffe7f0;--text:#5b3447;--muted:#997386;--accent:#e879a9;--accent2:#c54f87;--line:#f3c9dc;--wall:radial-gradient(circle at 10% 10%,#ffe0ed 0,transparent 30%)}
+body[data-theme="cozy"]{--bg:#211b17;--panel:#30251e;--panel2:#3d3027;--text:#f5e5d2;--muted:#c0a58b;--accent:#d49a65;--accent2:#a56c3d;--line:#554334}
+body[data-theme="horror"]{--bg:#090b0c;--panel:#15191a;--panel2:#202627;--text:#e4e8e7;--muted:#899694;--accent:#b91c3b;--accent2:#7f1026;--line:#303839;--wall:radial-gradient(circle at 80% 0,#301017 0,transparent 35%)}
+body[data-theme="space"]{--bg:#0c1024;--panel:#171d39;--panel2:#232b50;--text:#eef0ff;--muted:#a2afd1;--accent:#7c9cff;--accent2:#5369d9;--line:#39456d;--wall:radial-gradient(circle at 15% 0,#2a205c 0,transparent 40%)}
+body[data-theme="nature"]{--bg:#122019;--panel:#1d3025;--panel2:#294033;--text:#e8f3e8;--muted:#a9c0ad;--accent:#8dc78c;--accent2:#51975d;--line:#395441}
+body[data-theme="minimal"]{--bg:#f1f1f1;--panel:#fff;--panel2:#e6e6e6;--text:#202020;--muted:#737373;--accent:#4f5965;--accent2:#303a45;--line:#d1d1d1}
+.wrap{max-width:900px;margin:auto;padding:24px 16px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:14px;background:var(--accent);display:grid;place-items:center;color:white;font-size:22px}.brand h1{font-size:19px;margin:0}.brand small{color:var(--muted)}button,select,input{font:inherit}button{border:0;background:var(--accent);color:white;border-radius:12px;padding:10px 14px;font-weight:650;cursor:pointer}button:hover{filter:brightness(1.06)}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.ghost{background:transparent;color:var(--muted);padding:7px 10px}button.danger{background:#9f2941}.datebar{display:flex;align-items:center;justify-content:space-between;background:var(--panel);padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);margin-bottom:16px}.datebar strong{font-size:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:16px}.progressrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.progressrow h2,.card h2{font-size:16px;margin:0}.muted{color:var(--muted);font-size:13px}.bar{height:9px;background:var(--panel2);border-radius:99px;overflow:hidden}.bar>div{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .25s}.habits{display:grid;gap:10px}.habit{display:flex;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--line);padding:13px;border-radius:16px}.habit .emoji{width:42px;height:42px;display:grid;place-items:center;background:var(--panel);border-radius:13px;font-size:22px;flex-shrink:0}.habitinfo{flex:1;min-width:0}.habitinfo strong{display:block;overflow:hidden;text-overflow:ellipsis}.habitinfo small{color:var(--muted)}.check{width:34px;height:34px;border:2px solid var(--line);background:transparent;color:var(--text);border-radius:11px;padding:0;font-size:18px}.check.done{background:var(--accent);border-color:var(--accent);color:white}.actions{display:flex;gap:4px}.empty{text-align:center;color:var(--muted);padding:30px 10px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.chart{width:100%;height:190px;display:block}.chart text{fill:var(--muted);font-size:11px}.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.theme{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--panel2);color:var(--text);text-align:left}.theme.active{outline:2px solid var(--accent)}.theme span{display:block;font-size:20px;margin-bottom:4px}.theme small{color:var(--muted)}.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:16px;z-index:10}.modal.show{display:flex}.dialog{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px;width:min(440px,100%);max-height:90vh;overflow:auto}.dialog h2{margin:0 0 16px}.field{display:grid;gap:6px;margin-bottom:12px}.field label{font-size:13px;color:var(--muted)}.field input,.field select{width:100%;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:11px}.dialogbuttons{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.settings{display:flex;align-items:center;justify-content:space-between}.footer{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
+@media(max-width:650px){.grid2{grid-template-columns:1fr}.wrap{padding:16px 12px 40px}.themes{grid-template-columns:repeat(2,1fr)}.habit{padding:10px}.actions button{padding:7px 8px}}
+</style></head>
+<body data-theme="minimal">
+<div class="wrap">
+<header class="top"><div class="brand"><div class="logo">✓</div><div><h1>Habit Track</h1><small id="subtitle">Satu hari, satu langkah.</small></div></div><button id="settingsBtn" class="secondary">⚙️ Tema</button></header>
+<div class="datebar"><button class="ghost" id="prevDay">‹</button><strong id="dateLabel"></strong><button class="ghost" id="nextDay">›</button></div>
+<section class="card"><div class="progressrow"><h2>Progress hari ini</h2><strong id="percent">0%</strong></div><div class="bar"><div id="progressFill"></div></div><p class="muted" id="progressText" style="margin-bottom:0">0 dari 0 selesai</p></section>
+<section class="card"><div class="progressrow"><h2>Habit kamu</h2><button id="addBtn">＋ Tambah</button></div><div class="habits" id="habitList"></div></section>
+<div class="grid2"><section class="card"><h2>Progress 7 hari</h2><p class="muted">Habit selesai per hari</p><svg id="chart" class="chart" viewBox="0 0 340 190" preserveAspectRatio="none"></svg></section><section class="card"><h2>Ringkasan</h2><p class="muted">Hari ini</p><div style="font-size:34px;font-weight:750" id="doneCount">0</div><p class="muted">habit diselesaikan</p><div class="bar"><div id="summaryFill"></div></div><p class="muted" id="summaryText">Mulai checklist pertamamu.</p></section></div>
+<section class="card"><div class="settings"><div><h2>Theme pack</h2><div class="muted">Pilih tampilan favorit</div></div><button class="secondary" id="themeToggle">Lihat tema</button></div><div class="themes" id="themeGrid"></div></section>
+<div class="footer">Data tersimpan di perangkat ini.</div>
 </div>
-
-<div class="card">
-<h3>Daily habits</h3>
-<div id="list"></div>
-</div>
-
-<div class="card">
-<button onclick="resetDay()">Reset hari ini</button>
-</div>
-
+<div class="modal" id="habitModal"><div class="dialog"><h2 id="modalTitle">Tambah habit</h2><form id="habitForm"><input type="hidden" id="habitId"><div class="field"><label>Nama habit</label><input id="habitName" maxlength="50" required placeholder="Contoh: Baca buku"></div><div class="field"><label>Emoji</label><input id="habitEmoji" maxlength="5" value="✨" placeholder="✨"></div><div class="field"><label>Target (opsional)</label><input id="habitTarget" maxlength="40" placeholder="Contoh: 20 menit"></div><div class="dialogbuttons"><button type="button" class="secondary" id="cancelModal">Batal</button><button type="submit">Simpan</button></div></form></div></div>
 <script>
-const habits=[
-"Bangun pagi",
-"Sekolah",
-"Minum air cukup",
-"Makan teratur",
-"Gym",
-"Lari",
-"Kurangi screen time",
-"Tidur tepat waktu"
-];
-
-const today=new Date().toISOString().slice(0,10);
-document.getElementById("date").textContent=
-new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-
-let data=JSON.parse(localStorage.getItem("habit-"+today)||"{}");
-
-function render(){
-const list=document.getElementById("list");
-list.innerHTML="";
-habits.forEach((h,i)=>{
-const done=!!data[i];
-list.innerHTML+=`
-<div class="habit">
-<div>${h}</div>
-<button class="check ${done?"done":""}" onclick="toggle(${i})">${done?"✓":""}</button>
-</div>`;
-});
-update();
-}
-
-function toggle(i){
-data[i]=!data[i];
-localStorage.setItem("habit-"+today,JSON.stringify(data));
-render();
-}
-
-function update(){
-const total=habits.length;
-const done=habits.filter((_,i)=>data[i]).length;
-const pct=Math.round(done/total*100);
-document.getElementById("percent").textContent=pct+"%";
-document.getElementById("bar").style.width=pct+"%";
-document.getElementById("count").textContent=done+" / "+total+" selesai";
-}
-
-function resetDay(){
-data={};
-localStorage.removeItem("habit-"+today);
-render();
-}
-render();
-</script>
-</body>
-</html>
-
+const THEMES=[["minimal","⚪","Minimal"],["cute","🐱","Cute"],["cozy","🧸","Cozy"],["horror","🕸️","Horror"],["space","🌌","Space"],["nature","🍃","Nature"]];
+let habits=JSON.parse(localStorage.getItem("ht_habits")||"[]");
+if(!habits.length){habits=[{id:"h1",name:"Bangun pagi",emoji:"🌤️",target:""},{id:"h2",name:"Minum air",emoji:"💧",target:""},{id:"h3",name:"Gym",emoji:"🏋️",target:""},{id:"h4",name:"Kurangi screen time",emoji:"📵",target:""}];saveHabits();}
+let theme=localStorage.getItem("ht_theme")||"minimal", current=new Date();current.setHours(0,0,0,0);
+const $=s=>document.querySelector(s),keyDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+function saveHabits(){localStorage.setItem("ht_habits",JSON.stringify(habits))}
+function dayData(d){return JSON.parse(localStorage.getItem("ht_day_"+keyDate(d))||"{}")}
+function setDayData(d,data){localStorage.setItem("ht_day_"+keyDate(d),JSON.stringify(data))}
+function fmt(d){return d.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+function render(){document.body.dataset.theme=theme;$("#dateLabel").textContent=fmt(current);let data=dayData(current),done=habits.filter(h=>data[h.id]).length,total=habits.length,pct=total?Math.round(done/total*100):0;$("#percent").textContent=pct+"%";$("#progressFill").style.width=pct+"%";$("#summaryFill").style.width=pct+"%";$("#progressText").textContent=`${done} dari ${total} selesai`;$("#doneCount").textContent=done;$("#summaryText").textContent=pct===100&&total?"Semua habit selesai! 🎉":total?`${total-done} habit lagi untuk hari ini`:"Tambahkan habit dulu.";
+let list=$("#habitList");list.innerHTML="";if(!total){list.innerHTML='<div class="empty">Belum ada habit. Tambahkan yang mau kamu track.</div>'}
+habits.forEach(h=>{let row=document.createElement("div");row.className="habit";row.innerHTML=`<div class="emoji">${escapeHTML(h.emoji||"✨")}</div><div class="habitinfo"><strong>${escapeHTML(h.name)}</strong><small>${escapeHTML(h.target||"")} </small></div><div class="actions"><button class="secondary" data-edit="${h.id}" aria-label="Edit">✎</button><button class="ghost" data-delete="${h.id}" aria-label="Hapus">×</button></div><button class="check ${data[h.id]?"done":""}" data-check="${h.id}">${data[h.id]?"✓":""}</button>`;list.appendChild(row)});
+list.querySelectorAll("[data-check]").forEach(b=>b.onclick=()=>{let x=dayData(current);x[b.dataset.check]=!x[b.dataset.check];setDayData(current,x);render()});list.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>openModal(b.dataset.edit));list.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>{if(confirm("Hapus habit ini? Data checklist habit ini ikut dihapus.")){let id=b.dataset.delete;habits=habits.filter(h=>h.id!==id);saveHabits();for(let i=0;i<400;i++){let d=new Date();d.setDate(d.getDate()-i);let x=dayData(d);delete x[id];setDayData(d,x)}render()}});
+renderChart();renderThemes()}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderChart(){let svg=$("#chart"),w=340,h=190,pad={l:24,r:8,t:12,b:28};svg.innerHTML="";let days=[];for(let i=6;i>=0;i--){let d=new Date(current);d.setDate(d.getDate()-i);let x=dayData(d),count=habits.filter(a=>x[a.id]).length;days.push({d,count})}let max=Math.max(1,...days.map(x=>x.count)),innerW=w-pad.l-pad.r,innerH=h-pad.t-pad.b;for(let i=0;i<=2;i++){let y=pad.t+innerH*i/2;svg.insertAdjacentHTML("beforeend",`<line x1="${pad.l}" y1="${y}" x2="${w-pad.r}" y2="${y}" stroke="var(--line)" stroke-dasharray="3 4"/>`)}days.forEach((v,i)=>{let bw=22,gap=(innerW-7*bw)/6,x=pad.l+i*(bw+gap),barH=innerH*v.count/max,y=pad.t+innerH-barH;svg.insertAdjacentHTML("beforeend",`<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(2,barH)}" rx="6" fill="var(--accent)"/><text x="${x+bw/2}" y="${h-8}" text-anchor="middle">${v.d.toLocaleDateString("id-ID",{weekday:"short"}).slice(0,2)}</text>`);if(v.count)svg.insertAdjacentHTML("beforeend",`<text x="${x+bw/2}" y="${Math.max(10,y-5)}" text-anchor="middle">${v.count}</text>`)})}
+function renderThemes(){let grid=$("#themeGrid");grid.innerHTML="";THEMES.forEach(t=>{let b=document.createElement("button");b.className="theme"+(theme===t[0]?" active":"");b.innerHTML=`<span>${t[1]}</span>${t[2]}<small>${theme===t[0]?"Dipakai":"Pilih tema"}</small>`;b.onclick=()=>{theme=t[0];localStorage.setItem("ht_theme",theme);render()};grid.appendChild(b)})}
+function openModal(id){let h=habits.find(x=>x.id===id);$("#habitId").value=h?.id||"";$("#habitName").value=h?.name||"";$("#habitEmoji").value=h?.emoji||"✨";$("#habitTarget").value=h?.target||"";$("#modalTitle").textContent=h?"Edit habit":"Tambah habit";$("#habitModal").classList.add("show");$("#habitName").focus()}
+function closeModal(){$("#habitModal").classList.remove("show")}
+$("#addBtn").onclick=()=>openModal();$("#cancelModal").onclick=closeModal;$("#habitModal").onclick=e=>{if(e.target===$("#habitModal"))closeModal()};
+$("#habitForm").onsubmit=e=>{e.preventDefault();let id=$("#habitId").value,name=$("#habitName").value.trim();if(!name)return;let item={id:id||"h"+Date.now(),name,emoji:$("#habitEmoji").value.trim()||"✨",target:$("#habitTarget").value.trim()};if(id)habits=habits.map(h=>h.id===id?item:h);else habits.push(item);saveHabits();closeModal();render()};
+$("#prevDay").onclick=()=>{current.setDate(current.getDate()-1);render()};$("#nextDay").onclick=()=>{current.setDate(current.getDate()+1);render()};$("#settingsBtn").onclick=()=>$("#themeGrid").scrollIntoView({behavior:"smooth"});$("#themeToggle").onclick=()=>$("#themeGrid").scrollIntoView({behavior:"smooth"});render();
+</script></body></html>
